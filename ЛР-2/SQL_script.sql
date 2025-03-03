@@ -150,7 +150,7 @@ CREATE TABLE IF NOT EXISTS `internet_sales`.`deliveries` (
   INDEX `fio_id_idx` (`fio` ASC) VISIBLE,
   CONSTRAINT `fio_id`
     FOREIGN KEY (`fio`)
-    REFERENCES `internet_sales`.`users` (`id`)
+    REFERENCES `internet_sales`.`orders` (`fio`)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
   CONSTRAINT `order_id_orders`
