@@ -39,21 +39,23 @@ CREATE TABLE IF NOT EXISTS `internet_sales`.`settings` (
   `db` VARCHAR(45) NULL,
   `user` VARCHAR(45) NULL,
   `password` VARCHAR(45) NULL,
-  PRIMARY KEY (`id`))
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `internet_sales`.`Shops`
+-- Table `internet_sales`.`shops`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `internet_sales`.`Shops` (
+CREATE TABLE IF NOT EXISTS `internet_sales`.`shops` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(225) NULL,
   `address` VARCHAR(225) NULL,
   `tel` VARCHAR(100) NULL,
   `site` VARCHAR(100) NULL,
   `email` VARCHAR(100) NULL,
-  PRIMARY KEY (`id`))
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE)
 ENGINE = InnoDB;
 
 
@@ -63,14 +65,15 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `internet_sales`.`product_type` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(225) NULL,
-  PRIMARY KEY (`id`))
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `internet_sales`.`Products`
+-- Table `internet_sales`.`products`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `internet_sales`.`Products` (
+CREATE TABLE IF NOT EXISTS `internet_sales`.`products` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `shop_id` INT NOT NULL,
   `type_id` INT NOT NULL,
@@ -83,9 +86,10 @@ CREATE TABLE IF NOT EXISTS `internet_sales`.`Products` (
   PRIMARY KEY (`id`, `shop_id`, `type_id`),
   INDEX `product_id_type_idx` (`type_id` ASC) VISIBLE,
   INDEX `shop_id_products_idx` (`shop_id` ASC) VISIBLE,
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
   CONSTRAINT `shop_id_products`
     FOREIGN KEY (`shop_id`)
-    REFERENCES `internet_sales`.`Shops` (`id`)
+    REFERENCES `internet_sales`.`shops` (`id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
   CONSTRAINT `product_id_type`
@@ -110,8 +114,9 @@ CREATE TABLE IF NOT EXISTS `internet_sales`.`orders` (
   `confirm` TINYINT NULL,
   PRIMARY KEY (`id`, `shop_id`, `product_id`, `fio`),
   INDEX `fio_idx` (`fio` ASC) VISIBLE,
-  INDEX `shop_id_shops_idx` (`shop_id` ASC) VISIBLE,
   INDEX `product_id_idx` (`product_id` ASC) VISIBLE,
+  INDEX `shop_id_shops_idx` (`shop_id` ASC) VISIBLE,
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
   CONSTRAINT `fio`
     FOREIGN KEY (`fio`)
     REFERENCES `internet_sales`.`users` (`id`)
@@ -119,21 +124,21 @@ CREATE TABLE IF NOT EXISTS `internet_sales`.`orders` (
     ON UPDATE CASCADE,
   CONSTRAINT `shop_id_shops`
     FOREIGN KEY (`shop_id`)
-    REFERENCES `internet_sales`.`Shops` (`id`)
+    REFERENCES `internet_sales`.`shops` (`id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
-  CONSTRAINT `product_id`
+  CONSTRAINT `id_product`
     FOREIGN KEY (`product_id`)
-    REFERENCES `internet_sales`.`Products` (`id`)
+    REFERENCES `internet_sales`.`products` (`id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `internet_sales`.`Deliveries`
+-- Table `internet_sales`.`deliveries`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `internet_sales`.`Deliveries` (
+CREATE TABLE IF NOT EXISTS `internet_sales`.`deliveries` (
   `order_id` INT NOT NULL AUTO_INCREMENT,
   `fio` INT NOT NULL,
   `address` VARCHAR(225) NULL,
@@ -141,13 +146,14 @@ CREATE TABLE IF NOT EXISTS `internet_sales`.`Deliveries` (
   `date` TIME NULL,
   `confirm` TINYINT NULL,
   PRIMARY KEY (`order_id`, `fio`),
-  INDEX `fio_idx` (`fio` ASC) VISIBLE,
-  CONSTRAINT `fio`
+  UNIQUE INDEX `order_id_UNIQUE` (`order_id` ASC) VISIBLE,
+  INDEX `fio_id_idx` (`fio` ASC) VISIBLE,
+  CONSTRAINT `fio_id`
     FOREIGN KEY (`fio`)
-    REFERENCES `internet_sales`.`orders` (`fio`)
+    REFERENCES `internet_sales`.`users` (`id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
-  CONSTRAINT `order_id`
+  CONSTRAINT `order_id_orders`
     FOREIGN KEY (`order_id`)
     REFERENCES `internet_sales`.`orders` (`id`)
     ON DELETE CASCADE
